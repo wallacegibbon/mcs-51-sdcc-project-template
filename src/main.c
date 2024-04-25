@@ -4,4 +4,6 @@
 void main(void)
 {
 	P1_1 = 0;
+	P2_1 = 1;
+	blah();
 }
