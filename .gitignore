@@ -1,0 +1,7 @@
+build/
+.cache/
+*.bin
+*.ihx
+*.hex
+*.swp
+*~
