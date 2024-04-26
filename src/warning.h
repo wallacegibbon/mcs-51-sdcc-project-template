@@ -1,7 +1,7 @@
 #ifndef __WARNING_H
 #define __WARNING_H
 
-#warning "hello, this is a normal header file"
+// #warning "hello, this is a normal header file"
 
 #include <mcs51/8051.h>
 

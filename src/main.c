@@ -11,16 +11,28 @@ __xdata unsigned char *d4;
 __code unsigned char *d5;
 unsigned char *d6;
 
-struct blah {
+struct my_record {
 	unsigned int id;
 	unsigned char cnt;
 };
 
-// __xdata struct blah a, *pa;
-__pdata struct blah a, *pa;
+int my_record_init(struct my_record *self, int id, int cnt)
+{
+	self->id = id;
+	self->cnt = cnt;
+	return 0;
+}
+
+int my_record_next(struct my_record *self)
+{
+	return self->cnt++;
+}
+
+__pdata struct my_record a, *pa;
 
 void main(void)
 {
+	unsigned char tmp;
 	P1_1 = 0;
 	P2 = sizeof(d1);
 	P2 = sizeof(d2);
@@ -32,5 +44,8 @@ void main(void)
 	a.cnt = 2;
 	pa->id = 11;
 	pa->cnt = 22;
+
+	my_record_init(pa, 11, 0);
+	tmp = my_record_next(pa);
 	blah();
 }
