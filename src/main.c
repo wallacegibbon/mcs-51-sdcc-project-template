@@ -4,7 +4,7 @@
 
 __sfr __at(0x91) P1M1;
 
-struct basic_timer0 t0;
+__xdata struct basic_timer0 t0;
 
 /// this is not a real delay_ms, use T0 and unsigned counter to do the soft delay later.
 void delay_ms(unsigned int n)
@@ -67,7 +67,7 @@ int flow_led_manager_step(struct flow_led_manager *self)
 	return softpwm_step(&self->pwm);
 }
 
-struct flow_led_manager led1;
+__pdata struct flow_led_manager led1;
 
 void main()
 {
