@@ -2,6 +2,8 @@
 
 int softpwm_init(struct softpwm *self, unsigned char target, softpwm_on_fn_t on, softpwm_off_fn_t off)
 {
+	if (target == 0)
+		return 1;
 	self->counter = 0;
 	self->target = target;
 	self->on = on;

@@ -38,7 +38,7 @@ struct flow_led_manager {
 int flow_led_manager_init(struct flow_led_manager *self)
 {
 	self->direction = 1;
-	self->target = 64;
+	self->target = 1;
 	if (softpwm_init(&self->pwm, self->target, led1_on, led1_off))
 		return 1;
 	return 0;
@@ -48,11 +48,11 @@ int flow_led_manager_grow(struct flow_led_manager *self)
 {
 	if (self->direction) {
 		self->target++;
-		if (self->target == 250)
+		if (self->target == 255)
 			self->direction = 0;
 	} else {
 		self->target--;
-		if (self->target == 10)
+		if (self->target == 0)
 			self->direction = 1;
 	}
 
