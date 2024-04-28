@@ -1,5 +1,6 @@
 #include "basic_timer.h"
-#include "softpwm.h"
+#include "pwm_manager.h"
+#include "soft_delay.h"
 #include <mcs51/8051.h>
 
 __sfr __at(0x91) P1M1;
@@ -9,12 +10,8 @@ __xdata struct basic_timer0 t0;
 /// this is not a real delay_ms, use T0 and unsigned counter to do the soft delay later.
 void delay_ms(unsigned int n)
 {
-	int i, j;
-	while (n--) {
-		for (i = 0; i < 8; i++)
-			for (j = 0; j < 128; j++)
-				;
-	}
+	while (n--)
+		delay_1ms();
 }
 
 int led1_on(void *unused_var1, void *unused_var2, void *unused_var3)
@@ -36,7 +33,7 @@ int led1_off(void *unused_var1, void *unused_var2, void *unused_var3)
 }
 
 struct flow_led_manager {
-	struct softpwm pwm;
+	struct pwm_manager pwm;
 	unsigned char target;
 	unsigned char direction;
 };
@@ -45,7 +42,7 @@ int flow_led_manager_init(struct flow_led_manager *self)
 {
 	self->direction = 1;
 	self->target = 0;
-	if (softpwm_init(&self->pwm, self->target, led1_on, led1_off))
+	if (pwm_manager_init(&self->pwm, self->target, led1_on, led1_off))
 		return 1;
 	return 0;
 }
@@ -62,7 +59,7 @@ int flow_led_manager_grow(struct flow_led_manager *self)
 			self->direction = 1;
 	}
 
-	if (softpwm_set_target(&self->pwm, self->target))
+	if (pwm_manager_set_target(&self->pwm, self->target))
 		return 1;
 
 	return 0;
@@ -70,13 +67,20 @@ int flow_led_manager_grow(struct flow_led_manager *self)
 
 int flow_led_manager_step(struct flow_led_manager *self)
 {
-	return softpwm_step(&self->pwm);
+	return pwm_manager_step(&self->pwm);
 }
 
 __pdata struct flow_led_manager led1;
 
+void loop()
+{
+	flow_led_manager_grow(&led1);
+	delay_ms(2);
+}
+
 void main()
 {
+	/// Make STC8H's P1 work like normal 8051's P1.
 	P1M1 = 0x00;
 
 	basic_timer0_init(&t0, 50);
@@ -86,10 +90,8 @@ void main()
 
 	EA = 1;
 
-	while (1) {
-		flow_led_manager_grow(&led1);
-		delay_ms(8);
-	}
+	while (1)
+		loop();
 }
 
 void t0_isr() __interrupt(1)
