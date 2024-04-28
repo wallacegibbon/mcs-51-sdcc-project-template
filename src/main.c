@@ -17,14 +17,20 @@ void delay_ms(unsigned int n)
 	}
 }
 
-int led1_on()
+int led1_on(void *unused_var1, void *unused_var2, void *unused_var3)
 {
+	(void)unused_var1;
+	(void)unused_var2;
+	(void)unused_var3;
 	P1_1 = 0;
 	return 0;
 }
 
-int led1_off()
+int led1_off(void *unused_var1, void *unused_var2, void *unused_var3)
 {
+	(void)unused_var1;
+	(void)unused_var2;
+	(void)unused_var3;
 	P1_1 = 1;
 	return 0;
 }

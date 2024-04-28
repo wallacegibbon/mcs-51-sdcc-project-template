@@ -1,6 +1,6 @@
 #include "softpwm.h"
 
-int softpwm_init(struct softpwm *self, unsigned char target, softpwm_on_fn_t on, softpwm_off_fn_t off)
+int softpwm_init(struct softpwm *self, unsigned char target, softpwm_op_fn_t on, softpwm_op_fn_t off)
 {
 	self->counter = 0;
 	self->target = target;
@@ -24,7 +24,7 @@ static int softpwm_signal_on(struct softpwm *self)
 		return 0;
 
 	self->signal_status = 1;
-	return self->on();
+	return self->on(self, self, self);
 }
 
 static int softpwm_signal_off(struct softpwm *self)
@@ -38,7 +38,7 @@ static int softpwm_signal_off(struct softpwm *self)
 		return 0;
 
 	self->signal_status = 0;
-	return self->off();
+	return self->off(self, self, self);
 }
 
 int softpwm_step(struct softpwm *self)
