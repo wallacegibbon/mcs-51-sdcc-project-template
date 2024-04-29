@@ -42,9 +42,15 @@ void loop()
 void main()
 {
 	P1M1 = 0x00;
+
 	timer0_reload();
+	TMOD = 0x01;
+	TF0 = 0;
+	ET0 = 1;
 	TR0 = 1;
+
 	flow_led_manager_init(&led1, led1_on, led1_off);
+
 	EA = 1;
 	while (1)
 		loop();
