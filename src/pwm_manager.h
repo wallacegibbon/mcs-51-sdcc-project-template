@@ -13,8 +13,7 @@ struct pwm_manager {
 	pwm_manager_op_fn_t off;
 };
 
-int pwm_manager_init(struct pwm_manager *self, unsigned char target,
-		     pwm_manager_op_fn_t on, pwm_manager_op_fn_t off);
+int pwm_manager_init(struct pwm_manager *self, unsigned char target, pwm_manager_op_fn_t on, pwm_manager_op_fn_t off);
 
 int pwm_manager_step(struct pwm_manager *self);
 

@@ -1,26 +1,24 @@
 #include "pwm_manager.h"
 
-int pwm_manager_init(struct pwm_manager *self, unsigned char target,
-		     pwm_manager_op_fn_t on, pwm_manager_op_fn_t off)
+int pwm_manager_init(struct pwm_manager *self, unsigned char target, pwm_manager_op_fn_t on, pwm_manager_op_fn_t off)
 {
 	self->counter = 0;
-	self->target = target;
 	self->next_target = target;
 	self->signal_status = 0;
 	self->on = on;
 	self->off = off;
+	/// call `off` on initialization.
+	self->off(self, self, self);
 	return 0;
 }
 
-static int pwm_manager_signal_on(struct pwm_manager *self)
+int pwm_manager_signal_on(struct pwm_manager *self)
 {
-	/// if the target is 0 (the minimum number), never call `on`.
-	if (self->next_target == 0)
-		return 1;
-
 	self->target = self->next_target;
 
-	/// do not call `off` if it's already off.
+	/// if the target is 0 (the minimum number), never call `on`.
+	if (self->target == 0)
+		return 0;
 	if (self->signal_status == 1)
 		return 0;
 
@@ -28,13 +26,11 @@ static int pwm_manager_signal_on(struct pwm_manager *self)
 	return self->on(self, self, self);
 }
 
-static int pwm_manager_signal_off(struct pwm_manager *self)
+int pwm_manager_signal_off(struct pwm_manager *self)
 {
 	/// if the target is 255 (the maximum number), never call `off`.
 	if (self->target == 255)
 		return 0;
-
-	/// do not call `off` if it's already off.
 	if (self->signal_status == 0)
 		return 0;
 

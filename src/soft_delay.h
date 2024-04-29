@@ -3,4 +3,6 @@
 
 void delay_1ms();
 
+void delay_ms(unsigned int n);
+
 #endif
