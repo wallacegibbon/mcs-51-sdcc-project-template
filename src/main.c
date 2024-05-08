@@ -7,7 +7,7 @@ __sfr __at(0x91) P1M1;
 
 __data unsigned int timer0_reset_value = 50;
 
-void timer0_reload()
+void timer0_reload(void)
 {
 	TH0 = (65536UL - timer0_reset_value) / 256;
 	TL0 = (65536UL - timer0_reset_value) % 256;
@@ -33,13 +33,13 @@ int led1_off(void *unused_var1, void *unused_var2, void *unused_var3)
 
 __pdata struct flow_led_manager led1;
 
-void loop()
+void loop(void)
 {
 	flow_led_manager_grow(&led1);
 	delay_ms(2);
 }
 
-void main()
+void main(void)
 {
 	P1M1 = 0x00;
 
@@ -56,7 +56,7 @@ void main()
 		loop();
 }
 
-void t0_isr() __interrupt(1)
+void t0_isr(void) __interrupt(1)
 {
 	timer0_reload();
 	flow_led_manager_step(&led1);
