@@ -1,10 +1,11 @@
 #include "flow_led_manager.h"
 
-int flow_led_manager_init(struct flow_led_manager *self, pwm_manager_op_fn_t on, pwm_manager_op_fn_t off)
+int flow_led_manager_init(struct flow_led_manager *self,
+			  pwm_manager_op_fn_t on, pwm_manager_op_fn_t off, void *payload)
 {
 	self->direction = 1;
 	self->target = 0;
-	if (pwm_manager_init(&self->pwm, self->target, on, off))
+	if (pwm_manager_init(&self->pwm, self->target, on, off, payload))
 		return 1;
 	return 0;
 }

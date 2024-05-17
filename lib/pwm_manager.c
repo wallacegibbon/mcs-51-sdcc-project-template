@@ -1,14 +1,16 @@
 #include "pwm_manager.h"
 
-int pwm_manager_init(struct pwm_manager *self, unsigned char target, pwm_manager_op_fn_t on, pwm_manager_op_fn_t off)
+int pwm_manager_init(struct pwm_manager *self, unsigned char target,
+		     pwm_manager_op_fn_t on, pwm_manager_op_fn_t off, void *payload)
 {
 	self->counter = 0;
 	self->next_target = target;
 	self->signal_status = 0;
 	self->on = on;
 	self->off = off;
+	self->payload = payload;
 	/// call `off` on initialization.
-	self->off(self, self, self);
+	self->off(self->payload);
 	return 0;
 }
 
@@ -23,7 +25,7 @@ int pwm_manager_signal_on(struct pwm_manager *self)
 		return 0;
 
 	self->signal_status = 1;
-	return self->on(self, self, self);
+	return self->on(self->payload);
 }
 
 int pwm_manager_signal_off(struct pwm_manager *self)
@@ -35,7 +37,7 @@ int pwm_manager_signal_off(struct pwm_manager *self)
 		return 0;
 
 	self->signal_status = 0;
-	return self->off(self, self, self);
+	return self->off(self->payload);
 }
 
 int pwm_manager_step(struct pwm_manager *self)

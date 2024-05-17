@@ -1,10 +1,10 @@
 CROSS_COMPILER_PREFIX = C:/Program Files/SDCC/bin/
 
-CROSS_C_SOURCE_FILES += $(wildcard ./src/*.c)
+CROSS_C_SOURCE_FILES += $(wildcard ./src/*.c ./lib/*.c)
 
-CROSS_ASM_SOURCE_FILES += $(wildcard ./src/*.asm)
+CROSS_ASM_SOURCE_FILES += $(wildcard ./src/*.asm ./lib/*.asm)
 
-CROSS_C_INCLUDES = ./src
+CROSS_C_INCLUDES = ./src ./lib
 
 CROSS_C_FLAGS += --model-small
 

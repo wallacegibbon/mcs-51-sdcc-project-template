@@ -1,6 +1,7 @@
 #include "flow_led_manager.h"
 #include "soft_delay.h"
 #include <mcs51/8051.h>
+#include <stddef.h>
 
 /// SFR for STC8H, set this SFR to 0 to make STC8H's P1 work like normal 8051's P1.
 __sfr __at(0x91) P1M1;
@@ -13,20 +14,16 @@ void timer0_reload(void)
 	TL0 = (65536UL - timer0_reset_value) % 256;
 }
 
-int led1_on(void *unused_var1, void *unused_var2, void *unused_var3)
+int led1_on(void *payload)
 {
-	(void)unused_var1;
-	(void)unused_var2;
-	(void)unused_var3;
+	(void)payload;
 	P1_1 = 0;
 	return 0;
 }
 
-int led1_off(void *unused_var1, void *unused_var2, void *unused_var3)
+int led1_off(void *payload)
 {
-	(void)unused_var1;
-	(void)unused_var2;
-	(void)unused_var3;
+	(void)payload;
 	P1_1 = 1;
 	return 0;
 }
@@ -49,7 +46,7 @@ void main(void)
 	ET0 = 1;
 	TR0 = 1;
 
-	flow_led_manager_init(&led1, led1_on, led1_off);
+	flow_led_manager_init(&led1, led1_on, led1_off, NULL);
 
 	EA = 1;
 	while (1)
